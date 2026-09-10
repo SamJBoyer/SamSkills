@@ -1,0 +1,1 @@
+This repos contains my skills for cursor. It contains scripts to sync these skills to the global cursor skills. Don't run anything from scripts/. Implement skill changes using best practices for skills. 

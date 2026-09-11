@@ -1,10 +1,8 @@
 ---
 name: setup-logs
 description: >-
-  Stands up a repo-root log/ tree (one folder per target-app run, CURRENT.txt
+  Setup a repo-root Logs/ tree (one folder per target-app run, CURRENT.txt
   pointing at the newest log file) and wires the app so each run writes there.
-  Use when the user names setup logs, CURRENT.txt, a log folder for runs, or
-  wants the target app to record per-run logs.
 disable-model-invocation: true
 ---
 

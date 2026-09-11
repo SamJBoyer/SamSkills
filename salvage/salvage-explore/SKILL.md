@@ -1,30 +1,30 @@
 ---
-name: salvage-appraise
+name: salvage-explore
 description: >-
-  Maps a TARGET_REPO into FUNCTIONAL_MODULEs and named SEAMs. Writes
-  .SALVAGE/modular-inventory.md describing each modular part, its purpose,
-  and how the project is structured with seams marked. Use when the user
-  names salvage-appraise, modular inventory, functional modules, or wants
-  to find separable parts of a repo.
+  Discovers FUNCTIONAL_MODULEs and named SEAMs in SOURCE_REPO. Writes
+  .SALVAGE/salvage-manifest.md. Use when the user names salvage-explore,
+  salvage-manifest, functional modules, seams, or wants a map of separable
+  parts before salvage-review or salvage-operation.
 disable-model-invocation: true
 ---
 
-# Salvage Appraise
+# Salvage Explore
 
-Take TARGET_REPO and find the modular functional components that already exist. Write a document that explains what those parts are, what each is for, and how they are structured — with every SEAM marked.
+Discover the FUNCTIONAL_MODULEs and SEAMs that already exist in SOURCE_REPO. Write the salvage-manifest. That file is the map `salvage-review` checks and `salvage-operation` consumes.
 
-Do not change product code. Do not extract or refactor. Explore, then write the inventory.
+Do not change product code. Do not extract, move, or refactor. Explore, then write the manifest.
 
 ## Terms
 
-- **TARGET_REPO**: the codebase this skill is invoked in (`git rev-parse --show-toplevel`).
+- **SOURCE_REPO**: the codebase being salvaged. Default: git top of the workspace this skill was invoked in (`git rev-parse --show-toplevel`). If the user names a different repo, that path is SOURCE_REPO.
 - **FUNCTIONAL_MODULE**: a cluster of behavior with a recognizable responsibility and a boundary you can point at (package, assembly, types, API, data model, process). A folder name is not a module.
 - **SEAM**: a named boundary between FUNCTIONAL_MODULEs, or between a module and the rest of the host.
 - **SEAM_SHAPE**: how that boundary is built — what information crosses it, and how separable it is. Treat each FUNCTIONAL_MODULE as if it were a service; the SEAM_SHAPE is its API layer.
+- **SALVAGE_MANIFEST**: `.SALVAGE/salvage-manifest.md` at SOURCE_REPO root.
 
-## Explore
+## Discover
 
-Resolve TARGET_REPO. Survey the code and docs. Map FUNCTIONAL_MODULEs the way behavior actually clusters, not only how folders are named.
+Resolve SOURCE_REPO. Survey the code and docs. Map FUNCTIONAL_MODULEs the way behavior actually clusters, not only how folders are named.
 
 For each FUNCTIONAL_MODULE record:
 
@@ -55,10 +55,10 @@ If a cluster has few edges to the rest of the graph, that pinch point is a candi
 
 ## Deliverable
 
-Create `.SALVAGE/` if needed. Write `.SALVAGE/modular-inventory.md`.
+Create `.SALVAGE/` if needed. Write `.SALVAGE/salvage-manifest.md`.
 
 ```markdown
-# Modular Inventory: <TARGET_REPO name>
+# Salvage Manifest: <SOURCE_REPO name>
 
 ## Modules
 
@@ -78,12 +78,14 @@ For each FUNCTIONAL_MODULE:
 - Pinch points, cycles, god objects / shared state
 ```
 
-Tell the user the inventory is at `.SALVAGE/modular-inventory.md`. Do not start extracting.
+Tell the user the salvage-manifest is at `.SALVAGE/salvage-manifest.md` and is ready for `salvage-review`. Do not start reviewing or moving.
 
 ## Do not
 
 - Run the test suite.
-- Change the codebase except writing the inventory.
+- Change the codebase except writing the salvage-manifest.
 - Extract, refactor, or introduce interfaces "while you are here."
 - Treat a directory as a FUNCTIONAL_MODULE unless the code actually clusters there.
 - Invent modules or seams that are not in the current implementation.
+- Dispatch subagents (that is `salvage-review`).
+- Move code (that is `salvage-operation`).
